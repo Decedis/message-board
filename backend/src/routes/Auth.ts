@@ -52,7 +52,7 @@ export const AuthRouteVerify = () => {
   return async (c: Context) => {
     const { token } = await c.req.json();
     const tokenData = (await verify(token, secret_key!)) as User;
-    console.log("tokenData: ", tokenData);
+    //console.log("tokenData: ", tokenData);
     try {
       const user = await prisma.user.findUnique({
         where: {
