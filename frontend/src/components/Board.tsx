@@ -1,4 +1,3 @@
-import { User } from "../utls/types";
 import { Post } from "./Post";
 
 export const Board = () => {

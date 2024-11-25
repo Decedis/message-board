@@ -61,16 +61,16 @@ export const refetchUser = async (token: string): Promise<LoginResponse> => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, //use if backend expects it
       },
       method: "POST",
-      body: JSON.stringify({ token }),
+      //body: JSON.stringify({ token }),
     });
-    if (!response.ok) {
-      throw new Error(`Response status: , ${response.status}`);
-    }
     const json = await response.json();
+    if (!response.ok) {
+      throw new Error(`${response.status}: ${json.error || "Unknown error"}`);
+    }
     return json as LoginResponse;
-    console.log(json);
   } catch (error) {
     console.error(error);
     throw error;

@@ -2,9 +2,9 @@ import { JwtPayload } from "jwt-decode";
 
 // Extend the existing JwtPayload interface
 export interface CustomJwtPayload extends JwtPayload {
-  id?: number;
+  sub: string;
   userName: string; // Add your custom properties
-  role?: string;
+  role: string;
 }
 
 export type User = {
@@ -16,4 +16,5 @@ export type User = {
 export type LoginResponse = {
   //user: User;
   token: string;
+  error?: string;
 };

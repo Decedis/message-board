@@ -13,23 +13,50 @@ function App() {
   const userLogin = useStore((state) => state.login);
   //Token check and User data-fetch happens here
   console.log("TOKEN: __", token);
+  // useEffect(() => {
+  //   if (token) {
+  //     refetchUser(token)
+  //       .then((res) => {
+  //         console.log("refetchUser at App.tsx RESPONSE:: ___", res);
+  //         const decodedToken = jwtDecode<CustomJwtPayload>(res.token);
+  //         console.log("DECODED TOKEN :: ==> ", decodedToken);
+  //         return userLogin(decodedToken, token);
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to fetch user:", err);
+  //         return logout();
+  //       });
+  //   } else {
+  //     logout();
+  //   }
+  // }, [token, logout, userLogin]);
   useEffect(() => {
     if (token) {
       refetchUser(token)
         .then((res) => {
-          console.log("refetchUser at App.tsx RESPONSE:: ___", res);
-          const decodedToken = jwtDecode<CustomJwtPayload>(res.token);
-          console.log("DECODED TOKEN :: ==> ", decodedToken);
-          return userLogin(decodedToken, token);
+          if (!res.token) {
+            console.error("No token in response");
+            return logout();
+          }
+
+          try {
+            const decodedToken = jwtDecode<CustomJwtPayload>(res.token);
+            console.log("DECODED TOKEN :: ==> ", decodedToken);
+            userLogin(decodedToken, res.token);
+          } catch (decodeError) {
+            console.error("Token decode error:", decodeError);
+            logout();
+          }
         })
         .catch((err) => {
           console.error("Failed to fetch user:", err);
-          return logout();
+          logout();
         });
     } else {
       logout();
     }
   }, [token, logout, userLogin]);
+
   return (
     <>
       <Navbar />
